@@ -1,0 +1,25 @@
+{
+  "name": "ac-music-app",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "devDependencies": {
+    "@nuxtjs/eslint-config-typescript": "12.1.0",
+    "@nuxtjs/tailwindcss": "6.9.5",
+    "@pinia-plugin-persistedstate/nuxt": "1.2.0",
+    "@pinia/nuxt": "0.5.1",
+    "eslint-config-pikadude-ts": "4.0.0",
+    "nuxt": "3.8.1",
+    "nuxt-icon": "0.6.6",
+    "pinia": "2.1.7",
+    "vue-types": "5.1.1",
+    "vue-types-nuxt": "2.0.1"
+  }
+}
