@@ -10,4 +10,4 @@ RUN yarn build
 FROM base
 COPY --from=build /ac-music-app/.output /ac-music-app/.output
 
-CMD ["node", "dist/server/index.mjs"]
+CMD ["node", ".output/server/index.mjs"]
