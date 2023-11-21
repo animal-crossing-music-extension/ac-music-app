@@ -5,6 +5,7 @@ EXPOSE 3000
 FROM base as build
 COPY --link package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
+COPY --link . .
 RUN yarn build
 
 FROM base
