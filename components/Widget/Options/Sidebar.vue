@@ -34,15 +34,14 @@
 </template>
 
 <script lang="ts">
+import { string } from 'vue-types';
 import { Constants } from '~/lib';
 
 export default defineComponent({
-    emits: ['selected'],
-    data() {
-        return {
-            selectedPage: Constants.OptionsPage.Options,
-        };
+    props: {
+        selectedPage: string<Constants.OptionsPage>(),
     },
+    emits: ['selected'],
     computed: {
         pages() {
             return Constants.OptionsPages;
@@ -51,7 +50,6 @@ export default defineComponent({
     methods: {
         select(page: Constants.OptionsPage) {
             if (page == this.selectedPage) return;
-            this.selectedPage = page;
             this.$emit('selected', page);
         },
     },

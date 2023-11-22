@@ -12,7 +12,7 @@
                     class="w-[600px] p-4 max-w-[100%] max-h-[100%] bg-white rounded-lg pointer-events-auto bg-opacity-90 h-[500px] relative flex gap-4 options"
                 >
                     <AppButton icon="mingcute:close-fill" color="black" class="absolute shadow-lg top-4 right-8" @click="show = false" />
-                    <WidgetOptionsSidebar @selected="selected" />
+                    <WidgetOptionsSidebar :selected-page="pendingSelection || page || undefined" @selected="selected" />
 
                     <TransitionGroup @after-leave="finishSelection">
                         <WidgetOptionsMain v-if="page == 'options'" key="options" class="w-full overflow-auto" />
