@@ -121,8 +121,7 @@ export default defineComponent({
             await this.fadeOut(3000);
             for (const callback of this.switchSongsCallbacks) callback();
             this.switchSongsCallbacks = [];
-            if (this.audio.readyState >= 3) this.playMusic();
-            else this.waitingToPlay = true;
+            this.waitingToPlay = true;
         },
         fadeOut(time: number) {
             return new Promise<void>((resolve) => {
