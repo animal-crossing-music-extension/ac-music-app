@@ -147,7 +147,13 @@ export default defineComponent({
             const start = Number(loopTimes.start);
             const end = Number(loopTimes.end);
             if (this.loopTimeout) clearTimeout(this.loopTimeout);
-            this.loopTimeout = setTimeout(() => (this.audio.currentTime = start), (end - this.audio.currentTime) * 1000);
+            this.loopTimeout = setTimeout(
+                () => {
+                    this.audio.currentTime = start;
+                    this.setLoopTimes();
+                },
+                (end - this.audio.currentTime) * 1000,
+            );
         },
     },
 });
