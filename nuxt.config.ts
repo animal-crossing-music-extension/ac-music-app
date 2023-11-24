@@ -7,4 +7,7 @@ export default defineNuxtConfig({
             prerender: true,
         },
     },
+    tailwindcss: {
+        addTwUtil: true,
+    },
 });
