@@ -12,10 +12,38 @@ export const useOptionsStore = defineStore('options', {
     },
     state: (): {
         game: Constants.Game | 'random';
+        location: {
+            manualLatLong: {
+                latitude: number;
+                longitude: number;
+            };
+            manualName: {
+                id: number;
+                latitude: number;
+                longitude: number;
+                name: string;
+                search: string;
+            };
+            selection: Constants.Location;
+        };
         volume: number;
-        weather: Constants.Weather | 'random';
+        weather: Constants.Weather | 'random' | 'live';
     } => ({
         game: Constants.Game.NH,
+        location: {
+            manualLatLong: {
+                latitude: 0,
+                longitude: 0,
+            },
+            manualName: {
+                id: 0,
+                latitude: 0,
+                longitude: 0,
+                name: '',
+                search: '',
+            },
+            selection: Constants.Location.Disabled,
+        },
         volume: 1,
         weather: Constants.Weather.Sunny,
     }),

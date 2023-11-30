@@ -16,22 +16,26 @@
 
         <h3>Music</h3>
         <p>Select which game's music you wish to listen to</p>
-        <div v-for="game in Games" :key="game.id" class="radio">
+        <div v-for="game in Games" :key="game.id" class="option">
             <input :id="game.id" v-model="options.game" type="radio" :value="game.id" />
             <label :for="game.id">{{ game.name }}</label>
         </div>
-        <div class="radio">
+        <div class="option">
             <input id="game-random" v-model="options.game" type="radio" value="random" />
             <label for="game-random">Random!</label>
         </div>
 
         <h3>Weather</h3>
         <p>Select the weather variation you wish to listen to</p>
-        <div v-for="weather in Weathers" :key="weather.id" class="radio">
+        <div class="option">
+            <input id="weather-live" v-model="options.weather" type="radio" value="live" />
+            <label for="weather-live">Live (based on location)</label>
+        </div>
+        <div v-for="weather in Weathers" :key="weather.id" class="option">
             <input :id="weather.id" v-model="options.weather" type="radio" :value="weather.id" />
             <label :for="weather.id">{{ weather.name }}</label>
         </div>
-        <div class="radio">
+        <div class="option">
             <input id="weather-random" v-model="options.weather" type="radio" value="random" />
             <label for="weather-random">Random!</label>
         </div>
