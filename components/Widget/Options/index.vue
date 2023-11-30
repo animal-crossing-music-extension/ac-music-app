@@ -15,8 +15,9 @@
                     <WidgetOptionsSidebar :selected-page="pendingSelection || page || undefined" @selected="selected" />
 
                     <TransitionGroup @after-leave="finishSelection">
-                        <WidgetOptionsMain v-if="page == 'options'" key="options" class="w-full overflow-auto" />
-                        <WidgetOptionsAbout v-if="page == 'about'" key="about" class="w-full overflow-auto" />
+                        <WidgetOptionsMain v-if="page == 'options'" key="options" class="w-full overflow-y-scroll" @selected="selected" />
+                        <WidgetOptionsLocation v-if="page == 'live-weather'" key="live-weather" class="w-full overflow-y-scroll" />
+                        <WidgetOptionsAbout v-if="page == 'about'" key="about" class="w-full overflow-y-scroll" />
                     </TransitionGroup>
                 </div>
             </div>
@@ -83,7 +84,11 @@ export default defineComponent({
     @apply accent-green-500;
 }
 
-:deep(.radio) {
+:deep(.option) {
     @apply flex items-center gap-2;
+}
+
+:deep(.suboption) {
+    @apply ml-[21px];
 }
 </style>
