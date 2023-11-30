@@ -91,7 +91,10 @@ export default defineComponent({
             if (optionsStore.location.selection == Constants.Location.Disabled && optionsStore.weather == 'live') {
                 optionsStore.weather = Constants.Weather.Sunny;
             }
-            if (optionsStore.location.selection != weatherStore.mode) weatherStore.setMode(optionsStore.location.selection);
+            if (optionsStore.location.selection != weatherStore.mode) {
+                if (weatherStore.mode == Constants.Location.Disabled) optionsStore.weather = 'live';
+                weatherStore.setMode(optionsStore.location.selection);
+            }
         });
         weatherStore.$subscribe(() => {
             if (optionsStore.weather == 'live' && musicStore.weather != weatherStore.weather) musicStore.setWeather(weatherStore.weather);
