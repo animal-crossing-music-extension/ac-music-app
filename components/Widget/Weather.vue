@@ -1,5 +1,5 @@
 <template>
-    <div class="relative w-full h-full font-bold">
+    <div v-if="options.location.selection != 'disabled'" class="relative w-full h-full font-bold">
         <Transition>
             <div v-if="weather.fetched" class="absolute bottom-0 flex items-center gap-4 text-2xl">
                 <Icon v-if="weather.icon" :name="weather.icon" size="64" />
@@ -14,6 +14,7 @@
 export default defineComponent({
     data() {
         return {
+            options: useOptionsStore(),
             weather: useWeatherStore(),
         };
     },

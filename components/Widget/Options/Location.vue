@@ -149,7 +149,6 @@ export default defineComponent({
 
         const permission = await navigator.permissions.query({ name: 'geolocation' });
         if (permission.state == 'granted') this.automaticModeState = 'on';
-        else if (this.options.location.selection == 'automatic') this.options.location.selection = Constants.Location.Disabled;
     },
     methods: {
         mapLink(latitude?: number, longitude?: number) {

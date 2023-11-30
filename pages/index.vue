@@ -88,6 +88,9 @@ export default defineComponent({
             if (!(musicStore.isRandomWeather && optionsStore.weather == 'random') && musicStore.weather != optionsStore.weather) {
                 musicStore.setWeather(optionsStore.weather);
             }
+            if (optionsStore.location.selection == Constants.Location.Disabled && optionsStore.weather == 'live') {
+                optionsStore.weather = Constants.Weather.Sunny;
+            }
             if (optionsStore.location.selection != weatherStore.mode) weatherStore.setMode(optionsStore.location.selection);
         });
         weatherStore.$subscribe(() => {

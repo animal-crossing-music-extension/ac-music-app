@@ -27,8 +27,8 @@
 
         <h3>Weather</h3>
         <p>Select the weather variation you wish to listen to</p>
-        <div class="option">
-            <input id="weather-live" v-model="options.weather" type="radio" value="live" />
+        <div class="option" @click="clickLive">
+            <input id="weather-live" v-model="options.weather" :disabled="!isLiveAllowed" type="radio" value="live" />
             <label for="weather-live">Live (based on location)</label>
         </div>
         <div v-for="weather in Weathers" :key="weather.id" class="option">
@@ -46,6 +46,7 @@
 import { Constants } from '~/lib';
 
 export default defineComponent({
+    emits: ['selected'],
     data() {
         return {
             options: useOptionsStore(),
@@ -58,6 +59,9 @@ export default defineComponent({
         Weathers() {
             return Constants.Weathers;
         },
+        isLiveAllowed() {
+            return this.options.location.selection != Constants.Location.Disabled;
+        },
     },
     methods: {
         saveVolume(event: Event) {
@@ -67,6 +71,9 @@ export default defineComponent({
         saveVolumeV(event: Event) {
             const volume = Number((event.target as HTMLInputElement).value) / 100;
             if (!isNaN(volume)) this.options.volume = volume;
+        },
+        clickLive() {
+            if (!this.isLiveAllowed) this.$emit('selected', Constants.OptionsPage.Location);
         },
     },
 });

@@ -15,7 +15,7 @@
                     <WidgetOptionsSidebar :selected-page="pendingSelection || page || undefined" @selected="selected" />
 
                     <TransitionGroup @after-leave="finishSelection">
-                        <WidgetOptionsMain v-if="page == 'options'" key="options" class="w-full overflow-y-scroll" />
+                        <WidgetOptionsMain v-if="page == 'options'" key="options" class="w-full overflow-y-scroll" @selected="selected" />
                         <WidgetOptionsLocation v-if="page == 'live-weather'" key="live-weather" class="w-full overflow-y-scroll" />
                         <WidgetOptionsAbout v-if="page == 'about'" key="about" class="w-full overflow-y-scroll" />
                     </TransitionGroup>

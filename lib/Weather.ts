@@ -40,7 +40,7 @@ export async function fetchWeather(latitude: number, longitude: number) {
     url.searchParams.set('longitude', longitude.toString());
     url.searchParams.set('current', 'temperature_2m,weather_code');
     url.searchParams.set('daily', 'sunrise,sunset');
-    url.searchParams.set('timezone', 'auto');
+    url.searchParams.set('timezone', 'GMT');
     url.searchParams.set('forecast_days', '1');
 
     const response = await fetch(url);
@@ -67,7 +67,10 @@ export async function getCoords() {
     switch (mode) {
         case Constants.Location.Automatic: {
             const permission = await navigator.permissions.query({ name: 'geolocation' });
-            if (permission.state != 'granted') return;
+            if (permission.state != 'granted') {
+                options.location.selection = Constants.Location.Disabled;
+                return;
+            }
 
             const position = await new Promise<GeolocationPosition>((resolve, reject) => {
                 navigator.geolocation.getCurrentPosition(resolve, reject);

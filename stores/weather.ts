@@ -8,26 +8,20 @@ export const useWeatherStore = defineStore('weather', {
         },
         async updateWeather() {
             const coords = await Weather.getCoords();
-            if (!coords) {
-                this.fetched = true;
-                return;
-            }
+            if (!coords) return;
             this.coords = coords;
             const { latitude, longitude } = coords;
 
             const weather = await Weather.fetchWeather(latitude, longitude);
-            if (!weather) {
-                this.fetched = true;
-                return;
-            }
+            if (!weather) return;
 
             this.code = weather.current.weather_code;
             this.temperature = `${weather.current.temperature_2m}${weather.current_units.temperature_2m}`;
-            this.sunrise = new Date(weather.daily.sunrise[0]).getTime();
-            this.sunset = new Date(weather.daily.sunset[0]).getTime();
+            this.sunrise = new Date(`${weather.daily.sunrise[0]}z`).getTime();
+            this.sunset = new Date(`${weather.daily.sunset[0]}z`).getTime();
             this.fetched = true;
 
-            const timeoutTime = new Date(weather.current.time).getTime() + 1000 * 60 * 15 - Date.now() + 1000 * 10; // add 10 seconds to give the API time to update (or to avoid spamming it)
+            const timeoutTime = new Date(`${weather.current.time}z`).getTime() + 1000 * 60 * 15 - Date.now() + 1000 * 10; // add 10 seconds to give the API time to update (or to avoid spamming it)
             if (this.updateTimeout) clearTimeout(this.updateTimeout);
             this.updateTimeout = setTimeout(() => {
                 this.updateWeather().catch(() => undefined);
@@ -117,8 +111,8 @@ export const useWeatherStore = defineStore('weather', {
             }
         },
         isDay(): boolean {
-            const now = new Date();
-            return now.getTime() >= this.sunrise && now.getTime() <= this.sunset;
+            const now = Date.now();
+            return now >= this.sunrise && now <= this.sunset;
         },
         weather(state): Constants.Weather {
             // https://open-meteo.com/en/docs
