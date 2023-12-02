@@ -74,9 +74,18 @@ export const SunColors = {
 
 export enum OptionsPage {
     About = 'about',
+    Location = 'live-weather',
     Options = 'options',
 }
 export const OptionsPages: { id: OptionsPage; name: string }[] = [
     { id: OptionsPage.Options, name: 'Options' },
+    { id: OptionsPage.Location, name: 'Location' },
     { id: OptionsPage.About, name: 'About' },
 ];
+
+export enum Location {
+    Automatic = 'automatic',
+    Disabled = 'disabled',
+    Manual = 'manual',
+    ManualLatLong = 'manual-latlong',
+}

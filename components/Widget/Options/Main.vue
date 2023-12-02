@@ -9,29 +9,43 @@
         <h3>Volume</h3>
         <p>Adjust the volume that the app's music plays at</p>
         <div class="flex items-center">
-            <input type="range" min="0" max="1" step="0.01" :value="options.volume" @change="saveVolume" />
-            <input type="number" min="0" max="100" step="1" :value="Math.round(options.volume * 100)" class="ml-2 w-[42px]" @change="saveVolumeV" />
+            <input type="range" min="0" max="100" step="1" :value="volumeV" @change="saveVolume" />
+            <input
+                ref="volume"
+                type="number"
+                min="0"
+                max="100"
+                step="1"
+                :value="volumeV"
+                class="ml-2 w-[42px]"
+                @input="inputVolume"
+                @change="saveVolume"
+            />
             <span>%</span>
         </div>
 
         <h3>Music</h3>
         <p>Select which game's music you wish to listen to</p>
-        <div v-for="game in Games" :key="game.id" class="radio">
+        <div v-for="game in Games" :key="game.id" class="option">
             <input :id="game.id" v-model="options.game" type="radio" :value="game.id" />
             <label :for="game.id">{{ game.name }}</label>
         </div>
-        <div class="radio">
+        <div class="option">
             <input id="game-random" v-model="options.game" type="radio" value="random" />
             <label for="game-random">Random!</label>
         </div>
 
         <h3>Weather</h3>
         <p>Select the weather variation you wish to listen to</p>
-        <div v-for="weather in Weathers" :key="weather.id" class="radio">
+        <div class="option" @click="clickLive">
+            <input id="weather-live" v-model="options.weather" :disabled="!isLiveAllowed" type="radio" value="live" />
+            <label for="weather-live">Live (based on location)</label>
+        </div>
+        <div v-for="weather in Weathers" :key="weather.id" class="option">
             <input :id="weather.id" v-model="options.weather" type="radio" :value="weather.id" />
             <label :for="weather.id">{{ weather.name }}</label>
         </div>
-        <div class="radio">
+        <div class="option">
             <input id="weather-random" v-model="options.weather" type="radio" value="random" />
             <label for="weather-random">Random!</label>
         </div>
@@ -42,6 +56,7 @@
 import { Constants } from '~/lib';
 
 export default defineComponent({
+    emits: ['selected'],
     data() {
         return {
             options: useOptionsStore(),
@@ -54,15 +69,30 @@ export default defineComponent({
         Weathers() {
             return Constants.Weathers;
         },
+        isLiveAllowed() {
+            return this.options.location.selection != Constants.Location.Disabled;
+        },
+        volumeV() {
+            return Math.round(this.options.volume * 100);
+        },
     },
     methods: {
-        saveVolume(event: Event) {
-            const volume = Number((event.target as HTMLInputElement).value);
-            if (!isNaN(volume)) this.options.volume = volume;
+        parseVolume(target: HTMLInputElement) {
+            const volume = Number(target.value);
+            if (isNaN(volume)) return null;
+            return Math.min(Math.max(volume, 0), 100);
         },
-        saveVolumeV(event: Event) {
-            const volume = Number((event.target as HTMLInputElement).value) / 100;
-            if (!isNaN(volume)) this.options.volume = volume;
+        saveVolume(event: Event) {
+            const volume = this.parseVolume(event.target as HTMLInputElement);
+            if (volume != null) this.options.volume = Number((volume / 100).toFixed(2));
+        },
+        inputVolume() {
+            const el = this.$refs.volume as HTMLInputElement;
+            const volume = this.parseVolume(el);
+            if (volume != null) el.value = String(volume);
+        },
+        clickLive() {
+            if (!this.isLiveAllowed) this.$emit('selected', Constants.OptionsPage.Location);
         },
     },
 });

@@ -2,8 +2,9 @@
     <div>
         <p v-if="debug">{{ hour }}</p>
         <Transition>
-            <!-- Have the loading always appear on top, so it can be seen while the options menu is open -->
-            <div v-if="loading" class="relative">
+            <!-- Have the loading always appear on top (z-10), so it can be seen while the options menu is open -->
+            <div v-if="loading" class="relative flex items-center justify-center gap-2">
+                <Icon name="svg-spinners:6-dots-scale" />
                 <p class="z-10 font-bold animate-pulse-color">Loading music...</p>
             </div>
         </Transition>
@@ -23,7 +24,9 @@ export default defineComponent({
     data(): {
         optionsStore: ReturnType<typeof useOptionsStore>;
         musicStore: ReturnType<typeof useMusicStore>;
+        weatherStore: ReturnType<typeof useWeatherStore>;
 
+        ready: boolean;
         switchSongsCallbacks: (() => void)[];
         waitingToPlay: boolean;
         loading: boolean;
@@ -35,13 +38,16 @@ export default defineComponent({
     } {
         const optionsStore = useOptionsStore();
         const musicStore = useMusicStore();
+        const weatherStore = useWeatherStore();
         return {
             optionsStore,
             musicStore,
+            weatherStore,
 
+            ready: false,
             switchSongsCallbacks: [], // we use this to queue up callbacks to run when we switch songs, in case the user switches a bunch of options too fast
             waitingToPlay: false,
-            loading: false,
+            loading: true,
             loopTimeout: null,
 
             hour: '00',
@@ -57,6 +63,7 @@ export default defineComponent({
             return this.$refs.audio as HTMLAudioElement;
         },
         src() {
+            if (!this.ready) return '';
             return `https://acmusic.app/music/${this.game}/${this.weather}/${this.hourAmPm}.ogg`;
         },
     },
@@ -68,7 +75,6 @@ export default defineComponent({
     },
     mounted() {
         this.hour = StrongHour(this.time);
-        this.game = this.musicStore.game;
 
         this.optionsStore.$subscribe(() => {
             console.debug('options store changed');
@@ -76,9 +82,19 @@ export default defineComponent({
         });
 
         this.musicStore.$subscribe(() => {
-            console.debug('music store changed');
+            console.debug('music store changed', this.musicStore.game, this.musicStore.weather);
             if (this.musicStore.game != this.game) this.switchSongs(() => (this.game = this.musicStore.game));
             if (this.musicStore.weather != this.weather) this.switchSongs(() => (this.weather = this.musicStore.weather));
+        });
+
+        this.weatherStore.$subscribe(() => {
+            console.debug('weather store changed');
+            if (this.weatherStore.fetched && !this.ready) {
+                console.debug('weather fetched', this.weatherStore.weather);
+                this.weather = this.weatherStore.weather;
+                this.ready = true;
+                this.playMusic();
+            }
         });
 
         this.audio.addEventListener('play', () => {
@@ -95,6 +111,7 @@ export default defineComponent({
             if (this.waitingToPlay) this.playMusic();
         });
         this.audio.addEventListener('loadstart', () => {
+            console.debug('loadstart');
             this.loading = true;
         });
         this.audio.addEventListener('waiting', () => {
@@ -103,11 +120,18 @@ export default defineComponent({
             if (this.audio.paused) this.loading = true;
         });
 
-        this.waitingToPlay = true;
+        if (this.optionsStore.weather != 'live' || this.weatherStore.fetched) {
+            this.ready = true;
+            this.playMusic();
+        }
     },
     methods: {
         playMusic() {
-            this.loading = false;
+            console.debug('playMusic', this.loading, this.waitingToPlay);
+            if (this.loading) {
+                this.waitingToPlay = true;
+                return;
+            }
             this.waitingToPlay = false;
             this.audio.volume = this.optionsStore.volume;
             this.audio.play();
@@ -115,6 +139,11 @@ export default defineComponent({
             document.title = `${this.hourAmPm} - AC Music App`;
         },
         async switchSongs(callback: () => void) {
+            if (!this.ready) {
+                callback();
+                return;
+            }
+
             this.switchSongsCallbacks.push(callback);
             if (this.switchSongsCallbacks.length > 1) return; // stop if we're already switching songs
 

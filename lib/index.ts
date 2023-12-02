@@ -3,3 +3,4 @@ export * as Constants from './Constants';
 export { default as Keyframes } from './Keyframes';
 export * as Random from './Random';
 export { default as StrongHour } from './StrongHour';
+export * as Weather from './Weather';

@@ -9,11 +9,10 @@
             @click="click"
             @mousemove="keepActive"
         >
-            <div class="flex items-center gap-8 grid-area-[logo]">
-                <img src="/icon/128.png" width="64" height="64" />
-                <p class="font-bold">AC Music App</p>
+            <div class="grid-area-[logo]">
+                <WidgetLogo />
             </div>
-            <div class="flex justify-end grid-area-[options]">
+            <div class="flex justify-end items-center grid-area-[options]">
                 <WidgetOptions v-if="ready" :active="active" />
             </div>
             <div class="flex flex-col items-center justify-center grid-area-[clock]">
@@ -25,10 +24,14 @@
                 </Transition>
             </div>
             <div class="flex items-end grid-area-[weather]">
-                <p v-if="ready">Weather</p>
+                <Transition>
+                    <WidgetWeather v-if="ready" />
+                </Transition>
             </div>
             <div class="flex items-end justify-end grid-area-[player]">
-                <WidgetMusicPlayer v-if="ready" :time="time" :debug="DEBUG" />
+                <Transition>
+                    <WidgetMusicPlayer v-if="ready" :time="time" :debug="DEBUG" />
+                </Transition>
             </div>
         </main>
     </div>
@@ -76,6 +79,7 @@ export default defineComponent({
         // when the options are set to "random", this subscriber will tell the music store to pick a random song
         const optionsStore = useOptionsStore();
         const musicStore = useMusicStore();
+        const weatherStore = useWeatherStore();
         optionsStore.$subscribe(() => {
             if (!(musicStore.isRandomGame && optionsStore.game == 'random') && musicStore.game != optionsStore.game) {
                 musicStore.setGame(optionsStore.game);
@@ -83,10 +87,22 @@ export default defineComponent({
             if (!(musicStore.isRandomWeather && optionsStore.weather == 'random') && musicStore.weather != optionsStore.weather) {
                 musicStore.setWeather(optionsStore.weather);
             }
+            if (optionsStore.location.selection == Constants.Location.Disabled && optionsStore.weather == 'live') {
+                optionsStore.weather = Constants.Weather.Sunny;
+            }
+            if (optionsStore.location.selection != weatherStore.mode) {
+                if (weatherStore.mode == Constants.Location.Disabled) optionsStore.weather = 'live';
+                weatherStore.setMode(optionsStore.location.selection);
+            }
+        });
+        weatherStore.$subscribe(() => {
+            if (optionsStore.weather == 'live' && musicStore.weather != weatherStore.weather) musicStore.setWeather(weatherStore.weather);
         });
 
         this.timeInterval = setInterval(() => this.updateTime(), 100);
         this.backgroundInterval = setInterval(() => this.updateBackground(), 1000);
+
+        weatherStore.updateWeather();
 
         this.updateTime();
         this.updateBackground();
@@ -147,6 +163,16 @@ body {
 
 hr {
     @apply border-gray-300;
+}
+
+th,
+tr:nth-child(even) {
+    @apply bg-black bg-opacity-5;
+}
+
+th,
+td {
+    @apply border-r border-l p-1;
 }
 
 ::-webkit-scrollbar {

@@ -37,7 +37,10 @@ export default defineComponent({
     methods: {
         updateTime() {
             const date = new Date(this.time);
-            this.timeS = `${date.getHours()}:${date.getMinutes().toString().padStart(2, '0')}`;
+            this.timeS = date.toLocaleTimeString(undefined, {
+                hour: '2-digit',
+                minute: '2-digit',
+            });
             this.dateS = date.toLocaleDateString(undefined, {
                 weekday: 'long',
                 month: 'long',

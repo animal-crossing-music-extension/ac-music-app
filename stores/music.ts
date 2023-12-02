@@ -5,8 +5,17 @@ import { Constants, Random } from '~/lib';
 function setOptionGame(game: Constants.Game | 'random') {
     return game == 'random' ? Random.fromArray(Constants.Games.map((g) => g.id)) : game;
 }
-function setOptionWeather(game: Constants.Weather | 'random') {
-    return game == 'random' ? Random.fromArray(Constants.Weathers.map((g) => g.id)) : game;
+function setOptionWeather(weather: Constants.Weather | 'random' | 'live') {
+    const weatherStore = useWeatherStore();
+
+    switch (weather) {
+        case 'random':
+            return Random.fromArray(Constants.Weathers.map((w) => w.id));
+        case 'live':
+            return weatherStore.weather;
+        default:
+            return weather;
+    }
 }
 
 /*
@@ -20,13 +29,10 @@ export const useMusicStore = defineStore('music', {
             this.game = setOptionGame(game);
             this.isRandomGame = game == 'random';
         },
-        setWeather(weather: Constants.Weather | 'random') {
+        setWeather(weather: Constants.Weather | 'random' | 'live') {
             this.weather = setOptionWeather(weather);
             this.isRandomWeather = weather == 'random';
         },
-    },
-    persist: {
-        storage: !process.server ? localStorage : undefined,
     },
     state: (): {
         game: Constants.Game;
