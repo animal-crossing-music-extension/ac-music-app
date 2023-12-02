@@ -34,9 +34,6 @@ export const useMusicStore = defineStore('music', {
             this.isRandomWeather = weather == 'random';
         },
     },
-    persist: {
-        storage: !process.server ? localStorage : undefined,
-    },
     state: (): {
         game: Constants.Game;
         isRandomGame: boolean;
