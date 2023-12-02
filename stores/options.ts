@@ -36,7 +36,7 @@ export const useOptionsStore = defineStore('options', {
                 longitude: 0,
             },
             manualName: {
-                id: 0,
+                id: -1,
                 latitude: 0,
                 longitude: 0,
                 name: '',

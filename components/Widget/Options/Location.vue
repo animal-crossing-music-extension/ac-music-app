@@ -56,7 +56,7 @@
                 v-model="options.location.selection"
                 type="radio"
                 value="manual"
-                :disabled="options.location.manualName.id == null"
+                :disabled="options.location.manualName.id == -1"
             />
             <label for="location-manual">Manual (Name)</label>
         </div>
