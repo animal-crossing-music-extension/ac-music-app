@@ -9,9 +9,8 @@
             @click="click"
             @mousemove="keepActive"
         >
-            <div class="flex items-center gap-8 grid-area-[logo]">
-                <img src="/icon/128.png" width="64" height="64" />
-                <p class="font-bold">AC Music App</p>
+            <div class="grid-area-[logo]">
+                <WidgetLogo />
             </div>
             <div class="flex justify-end grid-area-[options]">
                 <WidgetOptions v-if="ready" :active="active" />
