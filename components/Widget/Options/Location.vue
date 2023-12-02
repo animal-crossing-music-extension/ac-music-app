@@ -133,6 +133,16 @@
                 @change="latlongChange"
             />
         </div>
+
+        <h3>Temperature Units</h3>
+        <div class="option">
+            <input id="units-metric" v-model="options.temperatureUnits" type="radio" value="metric" @change="unitsChange" />
+            <label for="units-metric">Metric (Celsius)</label>
+        </div>
+        <div class="option">
+            <input id="units-imperial" v-model="options.temperatureUnits" type="radio" value="imperial" @change="unitsChange" />
+            <label for="units-imperial">Imperial (Fahrenheit)</label>
+        </div>
     </div>
 </template>
 
@@ -216,6 +226,9 @@ export default defineComponent({
         },
         latlongChange() {
             this.updateWeather(Constants.Location.ManualLatLong); // call it manually since we don't watch for lat/long changes
+        },
+        unitsChange() {
+            if (this.weather.mode != Constants.Location.Disabled) this.weather.updateWeather();
         },
     },
 });

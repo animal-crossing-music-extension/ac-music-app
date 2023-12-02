@@ -89,3 +89,8 @@ export enum Location {
     Manual = 'manual',
     ManualLatLong = 'manual-latlong',
 }
+
+export enum TemperatureUnits {
+    Imperial = 'imperial',
+    Metric = 'metric',
+}
