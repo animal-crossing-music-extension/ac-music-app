@@ -9,8 +9,18 @@
         <h3>Volume</h3>
         <p>Adjust the volume that the app's music plays at</p>
         <div class="flex items-center">
-            <input type="range" min="0" max="1" step="0.01" :value="options.volume" @change="saveVolume" />
-            <input type="number" min="0" max="100" step="1" :value="Math.round(options.volume * 100)" class="ml-2 w-[42px]" @change="saveVolumeV" />
+            <input type="range" min="0" max="100" step="1" :value="volumeV" @change="saveVolume" />
+            <input
+                ref="volume"
+                type="number"
+                min="0"
+                max="100"
+                step="1"
+                :value="volumeV"
+                class="ml-2 w-[42px]"
+                @input="inputVolume"
+                @change="saveVolume"
+            />
             <span>%</span>
         </div>
 
@@ -62,15 +72,24 @@ export default defineComponent({
         isLiveAllowed() {
             return this.options.location.selection != Constants.Location.Disabled;
         },
+        volumeV() {
+            return Math.round(this.options.volume * 100);
+        },
     },
     methods: {
-        saveVolume(event: Event) {
-            const volume = Number((event.target as HTMLInputElement).value);
-            if (!isNaN(volume)) this.options.volume = volume;
+        parseVolume(target: HTMLInputElement) {
+            const volume = Number(target.value);
+            if (isNaN(volume)) return null;
+            return Math.min(Math.max(volume, 0), 100);
         },
-        saveVolumeV(event: Event) {
-            const volume = Number((event.target as HTMLInputElement).value) / 100;
-            if (!isNaN(volume)) this.options.volume = volume;
+        saveVolume(event: Event) {
+            const volume = this.parseVolume(event.target as HTMLInputElement);
+            if (volume != null) this.options.volume = Number((volume / 100).toFixed(2));
+        },
+        inputVolume() {
+            const el = this.$refs.volume as HTMLInputElement;
+            const volume = this.parseVolume(el);
+            if (volume != null) el.value = String(volume);
         },
         clickLive() {
             if (!this.isLiveAllowed) this.$emit('selected', Constants.OptionsPage.Location);
