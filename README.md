@@ -9,7 +9,7 @@ A work-in-progress successor to the [AC Music extension](https://github.com/anim
 - [ ] Music for special days/holidays
 - [x] A nice user interface
 - [ ] A beautiful user interface
-- [ ] Live weather based on the user's location
+- [x] Live weather based on the user's location
 - [ ] KK Slider
 - [ ] Hourly customisable town tune that plays on the hour
 - [ ] A good README and LICENSE
