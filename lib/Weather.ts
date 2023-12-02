@@ -34,7 +34,7 @@ type LocationSearchResponse = {
     results?: LocationSearchResult[];
 };
 
-export async function fetchWeather(latitude: number, longitude: number) {
+export async function fetchWeather(latitude: number, longitude: number, units: 'celsius' | 'fahrenheit') {
     const url = new URL('https://api.open-meteo.com/v1/forecast');
     url.searchParams.set('latitude', latitude.toString());
     url.searchParams.set('longitude', longitude.toString());
@@ -42,6 +42,7 @@ export async function fetchWeather(latitude: number, longitude: number) {
     url.searchParams.set('daily', 'sunrise,sunset');
     url.searchParams.set('timezone', 'GMT');
     url.searchParams.set('forecast_days', '1');
+    url.searchParams.set('temperature_unit', units);
 
     const response = await fetch(url);
     const data = (await response.json()) as WeatherResponse;
@@ -86,5 +87,15 @@ export async function getCoords() {
         case Constants.Location.ManualLatLong: {
             return options.location.manualLatLong;
         }
+    }
+}
+
+export function getUnits() {
+    const options = useOptionsStore();
+    switch (options.temperatureUnits) {
+        case Constants.TemperatureUnits.Metric:
+            return 'celsius';
+        case Constants.TemperatureUnits.Imperial:
+            return 'fahrenheit';
     }
 }

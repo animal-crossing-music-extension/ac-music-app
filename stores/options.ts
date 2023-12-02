@@ -26,6 +26,7 @@ export const useOptionsStore = defineStore('options', {
             };
             selection: Constants.Location;
         };
+        temperatureUnits: Constants.TemperatureUnits;
         volume: number;
         weather: Constants.Weather | 'random' | 'live';
     } => ({
@@ -44,6 +45,7 @@ export const useOptionsStore = defineStore('options', {
             },
             selection: Constants.Location.Disabled,
         },
+        temperatureUnits: Constants.TemperatureUnits.Metric,
         volume: 0.5,
         weather: Constants.Weather.Sunny,
     }),

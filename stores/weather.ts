@@ -12,7 +12,8 @@ export const useWeatherStore = defineStore('weather', {
             this.coords = coords;
             const { latitude, longitude } = coords;
 
-            const weather = await Weather.fetchWeather(latitude, longitude);
+            const units = Weather.getUnits();
+            const weather = await Weather.fetchWeather(latitude, longitude, units);
             if (!weather) return;
 
             this.code = weather.current.weather_code;
