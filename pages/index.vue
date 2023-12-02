@@ -12,7 +12,7 @@
             <div class="grid-area-[logo]">
                 <WidgetLogo />
             </div>
-            <div class="flex justify-end grid-area-[options]">
+            <div class="flex justify-end items-center grid-area-[options]">
                 <WidgetOptions v-if="ready" :active="active" />
             </div>
             <div class="flex flex-col items-center justify-center grid-area-[clock]">
