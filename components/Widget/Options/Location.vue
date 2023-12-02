@@ -27,9 +27,21 @@
             <label for="location-automatic">Automatic</label>
         </div>
         <div class="suboption">
-            <p v-if="automaticModeState == 'pending'">Waiting for permission...</p>
-            <p v-if="automaticModeState == 'error'">Error: Could not get your location. Have you blocked location permissions?</p>
-            <p v-if="automaticModeState == 'on'">Location access has been granted.</p>
+            <div v-if="automaticModeState == 'pending'" class="flex items-center gap-2">
+                <Icon name="svg-spinners:6-dots-scale" />
+                <p>Waiting for permission...</p>
+            </div>
+            <div v-if="automaticModeState == 'error'" class="flex items-center gap-2">
+                <Icon name="octicon:x" class="text-red-600" size="24" />
+                <div>
+                    <p>Error: Could not get your location.</p>
+                    <p>Have you blocked location permissions?</p>
+                </div>
+            </div>
+            <div v-if="automaticModeState == 'on'" class="flex items-center gap-1">
+                <Icon name="octicon:check" class="text-green-600" />
+                <p>Location access has been granted.</p>
+            </div>
             <AppButton
                 v-if="automaticModeState == 'off' || automaticModeState == 'error'"
                 content="Click here to turn on location access"
@@ -53,8 +65,14 @@
             <input v-model="options.location.manualName.search" type="text" placeholder="Location Name" @input="searchName" />
         </div>
         <div class="suboption">
-            <p v-if="searchResults?.length == 0">No results found.</p>
-            <p v-else-if="searching">Searching...</p>
+            <div v-if="searchResults?.length == 0" class="flex items-center gap-1">
+                <Icon name="octicon:x" />
+                <p>No results found.</p>
+            </div>
+            <div v-else-if="searching" class="flex items-center gap-2">
+                <Icon name="svg-spinners:6-dots-scale" />
+                <p>Searching...</p>
+            </div>
             <table v-else-if="searchResults" class="w-full">
                 <thead>
                     <tr>
