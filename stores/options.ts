@@ -44,7 +44,7 @@ export const useOptionsStore = defineStore('options', {
             },
             selection: Constants.Location.Disabled,
         },
-        volume: 1,
+        volume: 0.5,
         weather: Constants.Weather.Sunny,
     }),
 });
