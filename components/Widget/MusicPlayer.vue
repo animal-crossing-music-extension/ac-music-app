@@ -3,7 +3,8 @@
         <p v-if="debug">{{ hour }}</p>
         <Transition>
             <!-- Have the loading always appear on top (z-10), so it can be seen while the options menu is open -->
-            <div v-if="loading" class="relative">
+            <div v-if="loading" class="relative flex items-center justify-center gap-2">
+                <Icon name="svg-spinners:6-dots-scale" />
                 <p class="z-10 font-bold animate-pulse-color">Loading music...</p>
             </div>
         </Transition>
